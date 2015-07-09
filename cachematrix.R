@@ -23,8 +23,14 @@ makeCacheMatrix <- function(x = matrix()) {
     }
     
     get <- function() x
+    ## stores inverse value in cache
     setinverse <- function(inverse) m <<- inverse
+    ## retrieves stored value from cache
     getinverse <- function() m
+    
+    ## returns a list of 4 functions to operate with
+    ## this special matrix implementation which can be used
+    ## like yourvariable$getinverse
     list(set = set, get = get,
          setinverse = setinverse,
          getinverse = getinverse)
@@ -42,14 +48,19 @@ makeCacheMatrix <- function(x = matrix()) {
 
 cacheSolve <- function(x, ...) {
     
-    ## 
+    ## Request into cache inside 'x' environment
     m <- x$getinverse()
+    
+    ## if the cache exist, return the cached value
     if(!is.null(m)) {
         message("getting cached data")
         return(m)
     }
+    ## otherwise, retrieve the matrix itself
+    ## and use function solve to calculate inverse
     data <- x$get()
     m <- solve(data, ...)
+    ## store value in cache
     x$setinverse(m)
     ## Return a matrix that is the inverse of 'x'
     m
